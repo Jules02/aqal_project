@@ -9,3 +9,7 @@ Discuss the expressivity of the quantum model and compare its performance to a c
 ### 22/04 
 
 The goal is to learn the connectivity of graphs. Crucially, connectivity is strictly permutation invariant.
+
+### 23/04
+
+Results are very poor with the single parameter ansatz.
