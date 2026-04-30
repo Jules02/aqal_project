@@ -1,0 +1,102 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{braket}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Learning Graph Invariants with PQCs}
+\author{Jules DUPONT}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document is a report for my project on the use of parametrised quantum circuits (PQCs) to learn graph invariants such as connectivity (QML, Topic 2), realized in the context of the Applied Quantum Algorithms course. It is structured as follows:
+\end{abstract}
+
+\section{Theory questions}
+
+\begin{enumerate}
+    \item For any $k\in \mathbb{N}^*$, we have:
+    \begin{align*}
+        h_k(M) &= \langle 0 | U_k | 0 \rangle \\
+        &= \langle 0 | \Pi_{i=1}^k (W_i M) | 0 \rangle \\
+        &= \langle 0 | W_kM \cdots W_1M | 0 \rangle \\
+        &= \langle 0 | W_k\mathbb{I}M\mathbb{I} \cdots \mathbb{I}W_1\mathbb{I}M | 0 \rangle \\
+        &= \sum_{j_1=0}^{N-1} \cdots \sum_{j_{2k-1}=0}^{N-1} \langle 0 | W_k | j_{2k-1} \rangle \langle j_{2k-1} | M | j_{2k-2} \rangle \cdots \langle j_2  | W_1 | j_1 \rangle \langle j_1 | M | 0 \rangle \\
+        &= \sum_{j_1=0}^{N-1} \cdots \sum_{j_{2k-1}=0}^{N-1} w^{(k)}_{(0, \, j_{2k-1})} m_{(j_{2k-1}, \, j_{2k-2})}\cdots w^{(1)}_{(j_2, \, j_1)} m_{(j_1, \, 0)} \\
+        &= \sum_{j_1=0}^{N-1} \cdots \sum_{j_{2k-1}=0}^{N-1} m_{(j_{2k-1}, \, j_{2k-2})} \times \cdots \times m_{(j_1, \, 0)} \times w^{(1)}_{(j_2, \, j_1)} \cdots w^{(k)}_{(0, \, j_{2k-1})} \\
+        \text{i.e.} \quad h_k(M) &= \sum_{i_1=0}^{n-1} \cdots \sum_{i_{k}=0}^{n-1} m_{i_1} \times \cdots \times m_{i_k} \times w^{(1)}_{i_1} \cdots w^{(k)}_{i_k}
+    \end{align*}
+    where we have flattened the index pairs $(j_{2l},j_{2l-1})$ into the $i_l$ multi-indices with the mapping
+    \begin{align*}
+    w_{i_l}^{(l)} &:= w_{(j_{2l}, \, j_{2l-1})}^{(l)} \quad &&\text{for } l = 1, \dots, k-1, \text{ with } w_{i_k}^{(k)} := w_{(0, \, j_{2k-1})}^{(k)} \\
+    m_{i_l}       &:= m_{(j_{2k-2l+1}, \, j_{2k-2l})} \quad &&\text{for } l = 1, \dots, k-1, \text{ with } m_{i_k} := m_{(j_1, \, 0)}
+    \end{align*}
+    The rewriting of the sums is justified by the fact that $j_{2l}$ and $j_{2l-1}$ both range over $\llbracket 0, N-1 \rrbracket$. The multi-index $i_l$ should then cover $\llbracket 0, N-1 \rrbracket \times \llbracket 0, N-1 \rrbracket$ which has size $N^2 := n$, meaning it should range over $\llbracket 0, n-1 \rrbracket$.
+    
+    This proves the given formula for $h_k(M)$, which shows it is a $k$-th degree multivariate polynomial of the entries of the matrix $M$.
+
+    \item The formula involves $k$ many parameters sets, the $\mathbf{w}^{(j)}$, each of them containing $n$ entries. Therefore, there are exactly $n \times k$ parameters to set.
+    
+    Now, expanding the sums and using the commutativity of the multiplication we realize that many of the $m_{i_1} \times \cdots \times m_{i_k}$ terms are equal and can be grouped together. For example, with $k=2$, this is the case with $m_0 \times m_1$ and $m_1 \times m_0$. 
+    Still, we have to determine a certain amount of coefficient products, precisely corresponding to the quantity of equations we are looking for. To explicit it, we shall count the number of effectively distinct words of the form $m_{i_1} \times \cdots \times m_{i_k}$, where the $i_j \in \{0, \dots, n-1\}$. 
+    This can be viewed as a well-known combinatorial problem in which one has to place $k$ balls in $n$ boxes (each box may contain zero, one, or more than one ball). This is strictly equivalent to forming a word of length $k + (n-1)$ out of $k$ zeros intertwined with $n-1$ ones; one only needs to chose where to place the zeros and hence has $\binom{n+k-1}{k}$ possibilities. (Put differently, we have just recounted the number of multisets of size $k$ from $n$ elements.)
+
+    All in all, there are $n \times k$ many parameters to set the coefficients $w_{i_l}^{(j)}$ while having $\binom{n+k-1}{k}$ many equations. We see numerically that, for large $n$,
+    \[ \binom{n+k-1}{k} \gg nk \]
+    meaning that we have much more equations to satisfy than we have parameters to play with. The model is emphatically not maximally expressive: it can only represent a strict subset of all $k$-th degree multivariate polynomials.
+
+    \item Let $U : \{0,1\}^{n \times n} \mapsto U(N)$ be a circuit ansatz parametrized by an adjacency matrix, and let $A$ be an arbitrary adjacency matrix.
+
+    We say that $U$ is \textit{permutation equivariant} if for all permutation matrices $P \in \mathcal{S}_{n \times n}$ and corresponding qubit permutation unitaries $\tilde{P}$ :
+    \[ U(PAP^T) = \tilde{P}U(A)\tilde{P}^{\dagger}\]
+    
+    In other words, an ansatz that is defined by a graph is permutation equivariant if a permutation on the vertices of the graph results in the same ansatz to which we have correspondingly permutated the qubits: relabeling graph nodes and relabeling qubits are the same operation.
+
+    This is a crucial property, because
+
+    Let's show that the circuit ansatz $U$ constructed from $L$ layers of data encoding circuit blocks $M$ and variational parts $W_j(\theta_j) = \bigotimes_{i=1}^n R_x(\theta_j)$ is permutation equivariant. 
+
+    For any adjacency matrix $A$, the definition of $U$ says that:
+    \[ U(A) = \Pi_{i=1}^L (W_{i, A}(\theta_i) M_A) \]
+    where we have subscripted both $W_i$ and $M$ with the input adjacency matrix. By nature, $W_i$ does not depend on it, so we can drop it: $W_{i, A} \equiv W_i$. However, $M$ does; and for $P \in \mathcal{S}_{n \times n}$ an arbitrary permutation matrix, we have:
+    \[ M_{PAP^T} = e^{i\tilde{H}_G} = e^{i \tilde{P} H_G \tilde{P}^{\dagger}} = \tilde{P} e^{iH_G} \tilde{P}^{\dagger} = \tilde{P} M_A \tilde{P}^{\dagger} \]
+    where we used the fact that $\tilde{P}$ is unitary.
+
+    With that being said, we have:
+    \begin{align*}
+    U(PAP^{T}) &= \Pi_{i=1}^L (W_{i, PAP^T}(\theta_i) M_{PAP^T}) \\
+    &= \Pi_{i=1}^L (W_i(\theta_i) \tilde{P} M_A \tilde{P}^{\dagger}) \\
+    &= \tilde{P} \cdot \Pi_{i=1}^L (W_i(\theta_i) M_A) \cdot \tilde{P}^{\dagger} \\
+    &= \tilde{P}U(A)\tilde{P}^{\dagger}
+    \end{align*}
+
+    where we used the facts that $\tilde{P}$ commutes with the $W_i$ and $\tilde{P}$ is unitary.
+    
+    This shows that $U$ is permutation equivariant.
+
+    With $W_j^{'}(\theta_j^{(1)},\theta_j^{(2)}) = \bigotimes_{i=1}^n R_x(\theta_j^{(1)})R_y(\theta_j^{(2)})$, $W_j^{''}(\theta_j^{(1)},\theta_j^{(2)},\theta_j^{(3)}) = \bigotimes_{i=1}^n R_x(\theta_j^{(1)})R_y(\theta_j^{(2)})R_z(\theta_j^{(3)})$ or any other definition of the variational layers that does not depend on the input adjacency matrix, the derivation is exactly the same.
+
+    Note for later that parametrizing the data encoding layers surely does not affect these results, for we still have $M_{j, PAP^T} = \tilde{P} M_{j,A} \tilde{P}^{\dagger}$.
+    
+\end{enumerate}
+
+
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}
