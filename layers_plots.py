@@ -46,7 +46,7 @@ ax.grid(axis="y", linestyle="--", alpha=0.5)
 ax.spines[["top", "right"]].set_visible(False)
 
 fig1.tight_layout()
-fig1.savefig("test_accuracy_vs_layers_1v2_params.png", dpi=150)
+fig1.savefig("test_accuracy_vs_layers_1v2_params.pdf")
 print("Saved: test_accuracy_vs_layers_1v2_params.png")
 
 fig2, ax2 = plt.subplots(figsize=(8, 5))
@@ -71,6 +71,6 @@ ax2.spines[["top", "right"]].set_visible(False)
 ax2.legend(fontsize=11)
 
 fig2.tight_layout()
-fig2.savefig("test_time_vs_layers_1v2_params.png", dpi=150)
+fig2.savefig("test_time_vs_layers_1v2_params.pdf")
 print("Saved: test_time_vs_layers_1v2_params.png")
 plt.show()

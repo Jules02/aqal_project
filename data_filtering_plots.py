@@ -52,7 +52,7 @@ ax1.grid(axis="y", linestyle="--", alpha=0.5)
 ax1.spines[["top", "right"]].set_visible(False)
 
 fig1.tight_layout()
-fig1.savefig("test_accuracy_vs_layers.png", dpi=150)
+fig1.savefig("test_accuracy_vs_layers.pdf")
 print("Saved: test_accuracy_vs_layers.png")
 
 # ── Plot 2: Avg Time per Epoch ────────────────────────────────────────────────
@@ -78,7 +78,7 @@ ax2.spines[["top", "right"]].set_visible(False)
 ax2.legend(fontsize=11)
 
 fig2.tight_layout()
-fig2.savefig("test_accuracy_vs_layers_time.png", dpi=150)
+fig2.savefig("test_accuracy_vs_layers_time.pdf")
 print("Saved: test_accuracy_vs_layers_time.png")
 
 plt.show()
