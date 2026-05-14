@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 
 # Read data
-with open("experiments_log.jsonl") as f:
+with open("../experiments_log.jsonl") as f:
     records = [json.loads(line) for line in f if line.strip()]
 
 # Group by seed for pairing

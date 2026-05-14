@@ -4,7 +4,7 @@ import numpy as np
 THRESHOLD = 0.75
 MAX_EPOCHS = 50
 
-with open("experiments_log.jsonl") as f:
+with open("../experiments_log.jsonl") as f:
     records = [json.loads(line) for line in f if line.strip()]
 
 # Separate by experiment name

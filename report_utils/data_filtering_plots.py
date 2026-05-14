@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-with open("experiments_log.jsonl") as f:
+with open("../experiments_log.jsonl") as f:
     records = [json.loads(line) for line in f if line.strip()]
 
 def extract_data(records, experiment_name, num_params=2, dataset_size=500):

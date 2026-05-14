@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 
 # Read data
-with open("experiments_log.jsonl") as f:
+with open("../experiments_log.jsonl") as f:
     records = [json.loads(line) for line in f if line.strip()]
 
 quantum_train_acc   = [r["final_train_acc"] for r in records if r["experiment_name"] == "parametrized_filtereddataset"]

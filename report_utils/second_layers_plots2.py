@@ -17,9 +17,15 @@ df = df[df['experiment_name'] == 'sec2'].copy()
 
 # Map the numerical parameter count to a categorical label for cleaner legend
 df['Ansatz Type'] = df['num_params_per_layer'].map({
-    1: '1 Parameter / Layer',
-    2: '2 Parameters / Layer'
+    1: '1 parameter / layer',
+    2: '2 parameters / layer'
 })
+
+mask = (df['num_layers'] == 2) & (df['num_params_per_layer'] == 2)
+subset = df[mask]['final_test_acc']
+
+print(f"Mean:  {subset.mean():.4f}")
+print(f"Std:   {subset.std():.4f}")
 
 # ==========================================
 # PLOT 1: Standard Test Accuracy
@@ -33,14 +39,14 @@ sns.lineplot(
     marker='o',
     errorbar='ci' # 'ci' for confidence interval
 )
-plt.title('Standard Test Accuracy vs. Depth of Equivariant PQC', fontsize=14)
-plt.xlabel('Number of Layers', fontsize=12)
-plt.ylabel('Final Test Accuracy', fontsize=12)
+plt.xlabel('Number of re-uploading layers', fontsize=12)
+plt.ylabel('Final test accuracy', fontsize=12)
 plt.ylim(0.4, 0.9)
 plt.xticks(sorted(df['num_layers'].unique()))
 plt.grid(True, linestyle='--', alpha=0.6)
-plt.legend(title='Variational Design')
+plt.legend(title='Variational ansatz')
 plt.tight_layout()
+plt.savefig("plots/layers_params/test_acc.pdf")
 plt.show()
 
 # ==========================================
@@ -55,14 +61,14 @@ sns.lineplot(
     marker='s', # Use square markers to distinguish from the other plot
     errorbar='ci'
 )
-plt.title('Novel Graphs (Out-of-Distribution) Accuracy vs. Depth', fontsize=14)
-plt.xlabel('Number of Layers', fontsize=12)
-plt.ylabel('Novel Test Accuracy', fontsize=12)
+plt.xlabel('Number of re-uploading layers', fontsize=12)
+plt.ylabel('Final novel test accuracy', fontsize=12)
 plt.ylim(0.4, 0.9)
 plt.xticks(sorted(df['num_layers'].unique()))
 plt.grid(True, linestyle='--', alpha=0.6)
-plt.legend(title='Variational Design')
+plt.legend(title='Variational ansatz')
 plt.tight_layout()
+plt.savefig("plots/layers_params/novel_test_acc.pdf")
 plt.show()
 
 # ==========================================
@@ -77,11 +83,11 @@ sns.lineplot(
     marker='s', # Use square markers to distinguish from the other plot
     errorbar='ci'
 )
-plt.title('Avg Time per Epoch (s) vs. Depth', fontsize=14)
-plt.xlabel('Number of Layers', fontsize=12)
-plt.ylabel('Avg Time per Epoch (s)', fontsize=12)
+plt.xlabel('Number of re-uploading layers', fontsize=12)
+plt.ylabel('Avg time per epoch (s)', fontsize=12)
 plt.xticks(sorted(df['num_layers'].unique()))
 plt.grid(True, linestyle='--', alpha=0.6)
-plt.legend(title='Variational Design')
+plt.legend(title='Variational ansatz')
 plt.tight_layout()
+plt.savefig("plots/layers_params/time.pdf")
 plt.show()
