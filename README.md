@@ -15,26 +15,26 @@ From the [project instructions](aqa_miniprojects_qml_2026.pdf):
 aqal_project/
 │
 ├── papers/                          # Reference literature as provided in the project instructions
-│   ├── 2112.05261v3.pdf    # Equivariant Quantum Graph Circuits, Mernyei et al. (2022)
-│   └── 2210.07980v2.pdf   # Representation Theory for Geometric Quantum Machine Learning, Ragone et al. (2023)
+│   ├── 2112.05261v3.pdf             # Equivariant Quantum Graph Circuits, Mernyei et al. (2022)
+│   └── 2210.07980v2.pdf             # Representation Theory for Geometric Quantum Machine Learning, Ragone et al. (2023)
 │
-├── plots/                              # Generated figures for the report
+├── plots/                           # Generated figures for the report
 │   ├── ...
 │
 ├── quantum_model_variations/        # Variations of the quantum_model notebook for experiments
-│   ├── improved_ansatz.ipynb          # Improved ansatz, c.f. section 3.x. of the report
-│   ├── non_equiv.ipynb                      # Non-equivariant ansatz, c.f. section 3.x. of the report
-│   └── unparametrized_M.ipynb        # Non-parametrized data encoding layers, c.f. section 3.x. of the report
+│   ├── improved_ansatz.ipynb        # Improved ansatz, c.f. section 3.x. of the report
+│   ├── non_equiv.ipynb              # Non-equivariant ansatz, c.f. section 3.x. of the report
+│   └── unparametrized_M.ipynb       # Non-parametrized data encoding layers, c.f. section 3.x. of the report
 │
 ├── report_utils/                    # Python scripts for data analysis & plots
 │   ├── ...
 │
-├── aqa_miniprojects_qml_2026.pdf   # Project instructions
+├── aqa_miniprojects_qml_2026.pdf    # Project instructions
 ├── classical_model.ipynb            # Classical k-degree polynomial model
 ├── experiments_log.jsonl            # Raw experiment logs
-├── quantum_model.ipynb           # Main quantum model
-├── README.md                           # This file
-└── report.zip                                # Packaged back-up of the report (.tex source + figures)
+├── quantum_model.ipynb              # Main quantum model
+├── README.md                        # This file
+└── report.zip                       # Packaged back-up of the report (.tex source + figures)
 ```
 
 ## Notebooks
