@@ -22,9 +22,9 @@ aqal_project/
 │   ├── ...
 │
 ├── quantum_model_variations/        # Variations of the quantum_model notebook for experiments
-│   ├── improved_ansatz.ipynb        # Improved ansatz, c.f. section 3.x. of the report
-│   ├── non_equiv.ipynb              # Non-equivariant ansatz, c.f. section 3.x. of the report
-│   └── unparametrized_M.ipynb       # Non-parametrized data encoding layers, c.f. section 3.x. of the report
+│   ├── improved_ansatz.ipynb        # Improved ansatz, c.f. section 3.8 of the report
+│   ├── non_equiv.ipynb              # Non-equivariant ansatz, c.f. section 3.9 of the report
+│   └── unparametrized_M.ipynb       # Non-parametrized data encoding layers, c.f. section 3.4 of the report
 │
 ├── report_utils/                    # Python scripts for data analysis & plots
 │   ├── ...
